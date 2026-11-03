@@ -2,26 +2,25 @@
 
 Repositório da atividade prática de **Streamlit** da disciplina **Análise e Visualização de Dados (AVD 2026.2)** da **Cesar School**.
 
-Desenvolvimento de aplicação interativa analítica baseada no dataset de **Video Game Sales**, construída com **Streamlit**, **Plotly** e **Pandas** a partir da Análise Exploratória de Dados (EDA) desenvolvida em aula.
+Desenvolvimento de aplicação interativa analítica baseada no dataset de **Video Game Sales**, construída com **Streamlit**, **Plotly** e **Pandas** a partir da Análise Exploratória de Dados (EDA) desenvolvida em aula, apresentando interface moderna em **Dark Mode**.
 
 ---
 
-## 🚀 Link da Aplicação no Streamlit Community Cloud
+## Link da Aplicação no Streamlit Community Cloud
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://avd-20262-pratica-streamlit.streamlit.app)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://avd-20262-pratica-app-video-game-sales.streamlit.app/)
 
-> **Link do App:** [https://avd-20262-pratica-streamlit.streamlit.app](https://avd-20262-pratica-streamlit.streamlit.app)  
-> *(Caso ainda esteja realizando o primeiro deploy, basta conectar este repositório no [share.streamlit.io](https://share.streamlit.io/) selecionando `app.py` como arquivo principal).*
+> **Link do App publicado:** [https://avd-20262-pratica-app-video-game-sales.streamlit.app/](https://avd-20262-pratica-app-video-game-sales.streamlit.app/)
 
 **Link do Repositório GitHub:** [https://github.com/jaas5/AVD-20262-pratica-streamlit](https://github.com/jaas5/AVD-20262-pratica-streamlit)
 
 ---
 
-## 📊 Estrutura dos Dashboards
+## Estrutura dos Dashboards
 
-A aplicação está organizada em duas abas integradas, permitindo alternar entre uma visão científica e uma visão executiva:
+A aplicação está organizada em duas abas integradas, estruturadas na seguinte ordem:
 
-### 🔬 Dashboard 1: Laboratório de Distribuição e Correlação
+### Dashboard 1: Laboratório de Distribuição e Correlação
 Voltado para cientistas de dados e analistas explorarem as relações estatísticas do dataset:
 - **Painel Lateral com Filtros Reativos:**
   - Seletor de variável quantitativa de vendas (`Global_Sales`, `NA_Sales`, `EU_Sales`, `JP_Sales`, `Other_Sales`).
@@ -34,9 +33,9 @@ Voltado para cientistas de dados e analistas explorarem as relações estatísti
   - **Ranking de Plataformas (Top 10):** Barras horizontais ordenadas pelo volume de vendas na métrica escolhida.
   - **Evolução Temporal das Vendas:** Gráfico de área interativo mostrando a trajetória anual do faturamento.
 
-### 🎯 Dashboard 2: Painel Estratégico de KPIs (Público: Publishers)
+### Dashboard 2: Painel Estratégico de KPIs (Público: Publishers)
 Voltado especificamente para **Executivos e Gerentes de Publicação (Game Publishers e Diretores de Estúdio)** apoiarem decisões de alocação de orçamento e portfólio de lançamentos:
-- **4 Métricas Principais (Cards de KPI):**
+- **4 Métricas Principais (Cards de KPI com Glassmorphism):**
   1. **Receita Global Total ($ mi):** Faturamento acumulado no recorte filtrado.
   2. **Venda Média por Lançamento ($ mi/jogo):** Benchmark de produtividade unitária por título.
   3. **Taxa de Super Hits (%):** Proporção de títulos que romperam a barreira de 1 milhão de cópias vendidas.
@@ -49,12 +48,12 @@ Voltado especificamente para **Executivos e Gerentes de Publicação (Game Publi
 
 ---
 
-## 📁 Estrutura de Arquivos e Entregáveis
+## Estrutura de Arquivos e Entregáveis
 
 ```text
 AVD-20262-pratica-streamlit/
 ├── .streamlit/
-│   └── config.toml               # Identidade visual, tipografia e paleta minimalista
+│   └── config.toml               # Identidade visual, tipografia e tema Dark Mode
 ├── data/
 │   ├── raw/                      # Dataset original (ignorado no git)
 │   └── clean/
@@ -66,11 +65,11 @@ AVD-20262-pratica-streamlit/
 ├── notebooks/
 │   └── eda.ipynb                 # Notebook completo com a Análise Exploratória de Dados
 ├── prompts/
-│   ├── declaracao-uso-ia.md      # Registro detalhado da utilização de ferramentas de IA
 │   ├── layout-skeleton-prompt.md # Template de prompt do rascunho ao código
-│   ├── rascunho_dashboard1.png   # Cópia do rascunho 1
-│   ├── rascunho_dashboard2.png   # Cópia do rascunho 2
-│   └── referencia_visual.jpg     # Referência estética de design moderno
+│   ├── rascunho_dashboard1.png   # Rascunho 1
+│   ├── rascunho_dashboard2.png   # Rascunho 2
+│   ├── referencia_visual.jpg     # Referência estética de design moderno
+│   └── Declaração de IA.pdf      # Declaração assinada de uso de IA
 ├── src/
 │   ├── __init__.py
 │   └── data_loader.py            # Função unificada de carga de dados com cache @st.cache_data
@@ -81,7 +80,7 @@ AVD-20262-pratica-streamlit/
 
 ---
 
-## 🛠️ Como Executar Localmente
+## Como Executar Localmente
 
 ### 1. Criar e ativar o ambiente virtual
 
@@ -106,9 +105,9 @@ streamlit run app.py
 
 ---
 
-## 🤖 Declaração de Uso de IA Generativa
+## Declaração de Uso de IA Generativa
 
 O uso de Inteligência Artificial Generativa neste projeto segue rigorosamente o Plano de Ensino e a Política de Transparência da disciplina:
-- **Transparência no Código:** Todo trecho gerado ou aprimorado com apoio de IA está expressamente identificado no código-fonte com a marcação `# [IA] <ferramenta> – <finalidade>`.
+- **Transparência no Código:** Trechos desenvolvidos ou aprimorados com apoio de IA estão identificados no código-fonte com a marcação `# [IA] <ferramenta> – <finalidade>`.
 - **Autoria Individual das Decisões:** A definição do público-alvo (Publishers), a escolha das métricas (KPIs), as fórmulas de cálculo e a interpretação dos dados foram definidas e validadas individualmente pelo autor do projeto, conforme registrado em `entregas/justificativa-metricas.md`.
-- **Registro Detalhado:** Todos os prompts, aceites e alterações encontram-se documentados em `prompts/declaracao-uso-ia.md`.
+- **Documento Assinado:** A declaração formal preenchida e assinada encontra-se na pasta `prompts/`.
