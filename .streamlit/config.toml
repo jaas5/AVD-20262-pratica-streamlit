@@ -1,21 +1,19 @@
-# Configuração do Streamlit. Descomente e ajuste conforme o projeto avançar.
-# O tema pode ser trocado pelo menu ⋮ → Settings → Choose app theme.
-
+# Configuração do Streamlit - Tema Dark Mode Premium com Gradientes
 [theme]
-base = "light"
+base = "dark"
+primaryColor = "#6366F1"
+backgroundColor = "#0B0F19"
+secondaryBackgroundColor = "#131A2A"
+textColor = "#E2E8F0"
+borderColor = "#1E293B"
 font = "DM Sans:https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
 headingFont = "DM Sans:https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
-paddingTop = "0.5rem"
-baseRadius = "0.5rem"
+paddingTop = "0.75rem"
+baseRadius = "0.75rem"
 showWidgetBorder = true
-chartCategoricalColors = ["#638CA0", "#C98279", "#8DAA91", "#C4A56E", "#8D8BA8"]
-primaryColor = "#638CA0"
-backgroundColor = "#F7F9F9"
-secondaryBackgroundColor = "#EEF2F3"
-textColor = "#27343A"
-borderColor = "#DCE4E6"
+chartCategoricalColors = ["#6366F1", "#38BDF8", "#EC4899", "#10B981", "#F59E0B", "#A855F7"]
 
 [theme.sidebar]
-backgroundColor = "#EEF2F3"
-textColor = "#34434B"
-borderColor = "#DCE4E6"
+backgroundColor = "#0F1524"
+textColor = "#E2E8F0"
+borderColor = "#1E293B"
