@@ -1,6 +1,7 @@
 # [IA] Gemini – Estrutura base da aplicação, importação de dependências e configuração de página
 import streamlit as st
 import pandas as pd
+import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 
@@ -14,7 +15,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# [IA] Gemini – Injeção de CSS Customizado para Tema Dark Mode com Gradientes e Efeito Glassmorphism
+# [IA] Gemini – Injeção de CSS Customizado para Tema Dark Mode com Gradientes e Efeito Glassmorphism (sem tons de rosa)
 st.markdown(
     """
     <style>
@@ -55,7 +56,7 @@ st.markdown(
         margin-bottom: 1.2rem;
     }
 
-    /* Cards de KPI Customizados com Efeito Glass e Gradiente Superior */
+    /* Cards de KPI Customizados com Efeito Glass e Barra Superior */
     .kpi-container {
         background: linear-gradient(135deg, rgba(19, 26, 42, 0.75) 0%, rgba(15, 21, 36, 0.85) 100%);
         border: 1px solid rgba(255, 255, 255, 0.08);
@@ -86,7 +87,7 @@ st.markdown(
     .bar-indigo { background: linear-gradient(90deg, #6366F1, #818CF8); }
     .bar-cyan { background: linear-gradient(90deg, #38BDF8, #0EA5E9); }
     .bar-emerald { background: linear-gradient(90deg, #10B981, #34D399); }
-    .bar-purple { background: linear-gradient(90deg, #A855F7, #EC4899); }
+    .bar-amber { background: linear-gradient(90deg, #F59E0B, #FBBF24); }
 
     .kpi-title {
         font-size: 0.75rem;
@@ -167,32 +168,43 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# [IA] Gemini – Paleta de Cores Dark Mode vibrante e elegante
+# [IA] Gemini – Paleta de Cores Consistente para todas as variáveis quantitativas e dashboards (sem rosa)
+REGION_COLORS = {
+    "NA_Sales": "#38BDF8",       # América do Norte (Sky Blue)
+    "EU_Sales": "#6366F1",       # Europa (Indigo)
+    "JP_Sales": "#10B981",       # Japão (Emerald Green)
+    "Other_Sales": "#F59E0B",    # Outras Regiões (Amber)
+    "Global_Sales": "#818CF8",   # Vendas Globais (Soft Slate / Indigo)
+}
+
+REGION_LABELS_PT = {
+    "América do Norte": "#38BDF8",
+    "Europa": "#6366F1",
+    "Japão": "#10B981",
+    "Outras Regiões": "#F59E0B",
+}
+
+SALES_COLUMNS = ["NA_Sales", "EU_Sales", "JP_Sales", "Other_Sales", "Global_Sales"]
+SALES_LABELS = {
+    "NA_Sales": "América do Norte",
+    "EU_Sales": "Europa",
+    "JP_Sales": "Japão",
+    "Other_Sales": "Outras Regiões",
+    "Global_Sales": "Vendas Globais",
+}
+
 PALETTE = {
-    "primary": "#6366F1",       # Indigo elétrico
-    "secondary": "#38BDF8",     # Cyan brilhante
-    "accent_rose": "#EC4899",   # Rosa magenta
-    "accent_green": "#10B981",  # Verde esmeralda
-    "accent_gold": "#F59E0B",   # Âmbar dourado
-    "accent_purple": "#A855F7", # Roxo neon
-    "bg_dark": "#0B0F19",
-    "card_dark": "#131A2A",
+    "primary": "#6366F1",
+    "secondary": "#38BDF8",
+    "accent_green": "#10B981",
+    "accent_gold": "#F59E0B",
     "grid": "rgba(255, 255, 255, 0.07)",
     "text": "#E2E8F0",
     "text_muted": "#94A3B8",
 }
 
-SALES_COLUMNS = ["Global_Sales", "NA_Sales", "EU_Sales", "JP_Sales", "Other_Sales"]
-SALES_LABELS = {
-    "Global_Sales": "Vendas Globais",
-    "NA_Sales": "América do Norte",
-    "EU_Sales": "Europa",
-    "JP_Sales": "Japão",
-    "Other_Sales": "Outras Regiões",
-}
 
-
-# [IA] Gemini – Função auxiliar de estilização gráfica em Plotly configurada para Dark Mode
+# [IA] Gemini – Função auxiliar de estilização gráfica em Plotly com boas práticas visuais
 def format_chart(fig, height=360):
     fig.update_layout(
         height=height,
@@ -227,7 +239,7 @@ if "Year" in df.columns:
 # ---------------------------------------------------------
 with st.sidebar:
     st.markdown("## **Game Analytics**")
-    st.caption("Painel Executivo e Laboratório de Dados")
+    st.caption("Painel Executivo e Laboratório Quantitativo")
     st.markdown("---")
 
     st.markdown("### **Filtros Globais**")
@@ -267,17 +279,17 @@ with st.sidebar:
 
     st.markdown("---")
     # Filtro obrigatório do Dashboard 1: Seletor de Variável Quantitativa
-    st.markdown("### **Variável de Análise (Lab)**")
+    st.markdown("### **Variável Quantitativa em Foco**")
     variavel_analise = st.radio(
-        "Selecione a região/métrica de vendas:",
+        "Selecione a região de vendas para análise detalhada:",
         options=SALES_COLUMNS,
         format_func=lambda col: SALES_LABELS[col],
         index=0,
-        help="Define a variável quantitativa em destaque no Laboratório de Distribuição.",
+        help="Define a variável quantitativa em destaque no Laboratório de Correlação.",
     )
 
     st.markdown("---")
-    st.caption("*Dica:* Utilize os filtros acima para simular nichos e períodos específicos.")
+    st.caption("*Dica:* Utilize os filtros acima para refinar os períodos e nichos desejados.")
 
 # [IA] Gemini – Aplicação dos filtros reativos no DataFrame
 df_filtrado = df[df["Year"].between(intervalo_anos[0], intervalo_anos[1])]
@@ -301,181 +313,196 @@ st.markdown(
 # [IA] Gemini – Estrutura Principal: Abas dos 2 Dashboards (Dashboard 1 antes do Dashboard 2)
 # ---------------------------------------------------------
 tab_lab, tab_kpi = st.tabs([
-    "Dashboard 1: Laboratório de Distribuição e Correlação",
-    "Dashboard 2: Painel Estratégico de KPIs (Publishers)",
+    "Dashboard 1: Laboratório de Correlação e Distribuição Quantitativa",
+    "Dashboard 2: Painel Estratégico de Negócios e KPIs (Publishers)",
 ])
 
 # =========================================================
-# DASHBOARD 1: LABORATÓRIO DE DISTRIBUIÇÃO E CORRELAÇÃO
+# DASHBOARD 1: LABORATÓRIO DE CORRELAÇÃO E VARIÁVEIS QUANTITATIVAS
 # =========================================================
 with tab_lab:
-    st.markdown("### Laboratório de Análise Exploratória")
+    st.markdown("### Laboratório de Correlação e Análise Quantitativa")
     st.caption(
-        f"Avaliando a métrica quantitativa **{SALES_LABELS[variavel_analise]}** sob diferentes prismas estatísticos. "
-        f"({len(df_filtrado):,} de {len(df):,} jogos filtrados)".replace(",", ".")
+        "Análise estritamente focada nas variáveis quantitativas de vendas (América do Norte, Europa, Japão, Outras Regiões e Vendas Globais). "
+        "Cada região possui uma cor característica padronizada para facilitar a identificação visual em todo o aplicativo."
     )
 
     if df_filtrado.empty:
         st.warning("Nenhum registro encontrado para a combinação de filtros selecionada. Ajuste as opções na barra lateral.")
     else:
-        # [IA] Gemini – Linha 1: Heatmap de Correlação + Histograma de Distribuição Univariada
+        # [IA] Gemini – Linha 1: Matriz de Correlação Triangular (sem ambiguidade de simetria) + Histograma com cor característica
         col_corr, col_dist = st.columns([1, 1], gap="medium")
 
         with col_corr:
             with st.container(border=True):
-                st.markdown("#### Matriz de Correlação entre Mercados Regionais")
-                st.caption("Correlação não-paramétrica de Spearman (robusta a outliers)")
+                st.markdown("#### Matriz de Correlação Triangular de Spearman")
+                st.caption("Triângulo inferior sem simetria repetida, evitando ambiguidade visual.")
 
+                # Cálculo de Spearman
                 matriz_corr = df_filtrado[SALES_COLUMNS].corr(method="spearman")
                 matriz_corr.index = [SALES_LABELS[c] for c in matriz_corr.index]
                 matriz_corr.columns = [SALES_LABELS[c] for c in matriz_corr.columns]
 
+                # [IA] Gemini – Máscara triangular inferior para eliminar simetria ambígua
+                mask = np.triu(np.ones_like(matriz_corr, dtype=bool), k=1)
+                matriz_corr_triangular = matriz_corr.mask(mask)
+
+                # Texto de exibição apenas onde não é nulo
+                text_matrix = np.where(pd.isna(matriz_corr_triangular), "", matriz_corr_triangular.round(2).astype(str))
+
                 fig_corr = px.imshow(
-                    matriz_corr,
-                    text_auto=".2f",
+                    matriz_corr_triangular,
                     color_continuous_scale=[
                         [0.0, "#0F172A"],
-                        [0.5, "#312E81"],
-                        [0.75, "#6366F1"],
+                        [0.5, "#1E293B"],
+                        [0.75, "#312E81"],
                         [1.0, "#38BDF8"],
                     ],
                     zmin=-1,
                     zmax=1,
                     aspect="auto",
                 )
+                fig_corr.update_traces(
+                    text=text_matrix,
+                    texttemplate="%{text}",
+                    hoverongaps=False,
+                    hovertemplate="<b>%{y} x %{x}</b><br>Spearman: %{z:.2f}<extra></extra>",
+                )
                 fig_corr.update_coloraxes(colorbar_title="Spearman", colorbar_tickfont=dict(color=PALETTE["text_muted"]))
-                format_chart(fig_corr, height=360)
+                format_chart(fig_corr, height=370)
                 st.plotly_chart(fig_corr, use_container_width=True)
 
         with col_dist:
             with st.container(border=True):
+                cor_selecionada = REGION_COLORS.get(variavel_analise, "#38BDF8")
                 st.markdown(f"#### Distribuição de Vendas: {SALES_LABELS[variavel_analise]}")
-                st.caption("Histograma com recorte visual no percentil 95 para mitigar cauda longa")
+                st.caption(f"Histograma com recorte visual no percentil 95 (Cor característica: {SALES_LABELS[variavel_analise]}).")
 
                 p95 = df_filtrado[variavel_analise].quantile(0.95)
                 dados_zoom = df_filtrado[df_filtrado[variavel_analise] <= p95]
-
                 mediana_var = df_filtrado[variavel_analise].median()
 
                 fig_hist = px.histogram(
                     dados_zoom,
                     x=variavel_analise,
                     nbins=35,
-                    color_discrete_sequence=["#6366F1"],
+                    color_discrete_sequence=[cor_selecionada],
                     labels={variavel_analise: f"{SALES_LABELS[variavel_analise]} (milhões de cópias)", "count": "Quantidade de Jogos"},
                 )
                 fig_hist.add_vline(
                     x=mediana_var,
                     line_dash="dash",
-                    line_color="#38BDF8",
-                    line_width=2,
+                    line_color="#FFFFFF",
+                    line_width=1.8,
                     annotation_text=f"Mediana: {mediana_var:.2f}M",
                     annotation_position="top right",
-                    annotation_font_color="#38BDF8",
+                    annotation_font_color="#FFFFFF",
                 )
                 fig_hist.update_traces(
-                    marker=dict(line=dict(color="#818CF8", width=1)),
+                    marker=dict(line=dict(color="rgba(255,255,255,0.2)", width=0.8)),
                     hovertemplate="Faixa de Vendas: %{x:.2f}M<br>Jogos: %{y}<extra></extra>",
                 )
-                format_chart(fig_hist, height=360)
+                format_chart(fig_hist, height=370)
                 st.plotly_chart(fig_hist, use_container_width=True)
 
-        # [IA] Gemini – Linha 2: Boxplot por Gênero + Top Plataformas
-        col_box, col_plat = st.columns([1, 1], gap="medium")
+        # [IA] Gemini – Linha 2: Dispersão e Correlação Bivariada com Tendência Linear + Comparativo das Regiões
+        col_scatter, col_panel = st.columns([1, 1], gap="medium")
 
-        with col_box:
+        with col_scatter:
             with st.container(border=True):
-                st.markdown(f"#### Comparação por Gênero: {SALES_LABELS[variavel_analise]}")
-                st.caption("Dispersão e quartis entre os diferentes gêneros de jogos")
+                st.markdown(f"#### Dispersão e Correlação: {SALES_LABELS[variavel_analise]} vs Vendas Globais")
+                st.caption("Avaliando o alinhamento da região com o mercado global com reta de tendência linear.")
 
-                fig_box = px.box(
-                    dados_zoom,
-                    x="Genre",
-                    y=variavel_analise,
-                    color_discrete_sequence=["#38BDF8"],
-                    labels={"Genre": "Gênero", variavel_analise: f"{SALES_LABELS[variavel_analise]} (mi)"},
-                )
-                fig_box.update_traces(boxpoints=False)
-                fig_box.update_xaxes(tickangle=-35)
-                format_chart(fig_box, height=380)
-                st.plotly_chart(fig_box, use_container_width=True)
+                # Amostragem para alta performance de renderização
+                p95_x = df_filtrado[variavel_analise].quantile(0.95)
+                p95_y = df_filtrado["Global_Sales"].quantile(0.95)
+                df_scatter_zoom = df_filtrado[(df_filtrado[variavel_analise] <= p95_x) & (df_filtrado["Global_Sales"] <= p95_y)]
+                sample_scatter = df_scatter_zoom.sample(min(800, len(df_scatter_zoom)), random_state=42)
 
-        with col_plat:
-            with st.container(border=True):
-                st.markdown(f"#### Top 10 Plataformas: {SALES_LABELS[variavel_analise]}")
-                st.caption("Consoles e plataformas líderes na métrica selecionada")
-
-                top_plat = (
-                    df_filtrado.groupby("Platform", as_index=False)[variavel_analise]
-                    .sum()
-                    .nlargest(10, variavel_analise)
-                    .sort_values(variavel_analise, ascending=True)
-                )
-
-                fig_plat = px.bar(
-                    top_plat,
+                fig_scatter = px.scatter(
+                    sample_scatter,
                     x=variavel_analise,
-                    y="Platform",
-                    orientation="h",
-                    text_auto=".1f",
-                    color=variavel_analise,
-                    color_continuous_scale=["#1E1B4B", "#6366F1", "#818CF8"],
-                    labels={"Platform": "Plataforma", variavel_analise: f"{SALES_LABELS[variavel_analise]} (mi)"},
+                    y="Global_Sales",
+                    opacity=0.6,
+                    color_discrete_sequence=[cor_selecionada],
+                    labels={
+                        variavel_analise: f"{SALES_LABELS[variavel_analise]} (mi)",
+                        "Global_Sales": "Vendas Globais (mi)",
+                    },
                 )
-                fig_plat.update_coloraxes(showscale=False)
-                fig_plat.update_traces(hovertemplate="Plataforma: %{y}<br>Total: %{x:.2f}M cópias<extra></extra>")
-                format_chart(fig_plat, height=380)
-                st.plotly_chart(fig_plat, use_container_width=True)
+                # Cálculo da linha de tendência linear com numpy.polyfit
+                if len(sample_scatter) > 1 and sample_scatter[variavel_analise].nunique() > 1:
+                    slope, intercept = np.polyfit(sample_scatter[variavel_analise], sample_scatter["Global_Sales"], 1)
+                    x_vals = np.linspace(sample_scatter[variavel_analise].min(), sample_scatter[variavel_analise].max(), 50)
+                    y_vals = slope * x_vals + intercept
+                    fig_scatter.add_trace(go.Scatter(
+                        x=x_vals,
+                        y=y_vals,
+                        mode="lines",
+                        name="Tendência Linear",
+                        line=dict(color="#E2E8F0", dash="dash", width=2),
+                    ))
 
-        # [IA] Gemini – Linha 3: Evolução Temporal das Vendas
-        with st.container(border=True):
-            st.markdown(f"#### Evolução Histórica de Lançamentos e Vendas ({SALES_LABELS[variavel_analise]})")
-            st.caption("Trajetória de faturamento ao longo das décadas no período filtrado")
+                fig_scatter.update_traces(
+                    marker=dict(size=6, line=dict(width=0.5, color="rgba(255,255,255,0.3)")),
+                    hovertemplate=f"<b>{SALES_LABELS[variavel_analise]}:</b> %{{x:.2f}}M<br><b>Global:</b> %{{y:.2f}}M<extra></extra>",
+                )
+                format_chart(fig_scatter, height=360)
+                st.plotly_chart(fig_scatter, use_container_width=True)
 
-            evolucao_anual = (
-                df_filtrado.groupby("Year", as_index=False)[variavel_analise]
-                .sum()
-                .sort_values("Year")
-            )
+        with col_panel:
+            with st.container(border=True):
+                st.markdown("#### Distribuição Comparativa das Quatro Regiões")
+                st.caption("Visão integrada das quatro variáveis regionais, cada uma com sua respectiva cor padronizada.")
 
-            fig_evol = px.area(
-                evolucao_anual,
-                x="Year",
-                y=variavel_analise,
-                markers=True,
-                color_discrete_sequence=["#6366F1"],
-                labels={"Year": "Ano de Lançamento", variavel_analise: f"Vendas ({SALES_LABELS[variavel_analise]} em mi)"},
-            )
-            fig_evol.update_traces(
-                hovertemplate="Ano: %{x}<br>Vendas: %{y:.1f}M<extra></extra>",
-                line=dict(width=2.5, color="#818CF8"),
-            )
-            fig_evol.update_xaxes(dtick=2)
-            format_chart(fig_evol, height=310)
-            st.plotly_chart(fig_evol, use_container_width=True)
+                # Comparativo das 4 regiões com cores características
+                reg_cols = ["NA_Sales", "EU_Sales", "JP_Sales", "Other_Sales"]
+                df_melted = df_filtrado.melt(
+                    value_vars=reg_cols,
+                    var_name="Região",
+                    value_name="Vendas",
+                )
+                df_melted["Região"] = df_melted["Região"].map(SALES_LABELS)
+                # Recorte visual para comparação proporcional
+                limite_p95_geral = df_melted["Vendas"].quantile(0.95)
+                df_melted_zoom = df_melted[df_melted["Vendas"] <= limite_p95_geral]
+
+                fig_comp = px.histogram(
+                    df_melted_zoom,
+                    x="Vendas",
+                    color="Região",
+                    barmode="overlay",
+                    nbins=30,
+                    opacity=0.65,
+                    color_discrete_map=REGION_LABELS_PT,
+                    labels={"Vendas": "Vendas por Título (milhões de cópias)", "count": "Frequência"},
+                )
+                fig_comp.update_traces(marker=dict(line=dict(width=0.5, color="rgba(255,255,255,0.2)")))
+                format_chart(fig_comp, height=360)
+                st.plotly_chart(fig_comp, use_container_width=True)
 
 
 # =========================================================
-# DASHBOARD 2: PAINEL ESTRATÉGICO DE KPIS (PUBLISHERS)
+# DASHBOARD 2: PAINEL ESTRATÉGICO DE KPIS E NEGÓCIOS (PUBLISHERS)
 # =========================================================
 with tab_kpi:
-    st.markdown("### Visão Executiva e Indicadores de Negócio")
+    st.markdown("### Painel Estratégico de Negócios e Tomada de Decisão")
     st.caption(
-        "Painel desenvolvido para **Executivos e Gerentes de Publicação (Publishers)** "
-        "com foco em alocação de investimento, rentabilidade de catálogo e mitigação de risco."
+        "Visão voltada a **Executivos e Gerentes de Publicação (Publishers)** para análise de mercado, "
+        "plataformas, gêneros e competidores históricos com boas práticas de visualização."
     )
 
     if df_filtrado.empty:
         st.warning("Nenhum registro encontrado para a combinação de filtros selecionada. Ajuste as opções na barra lateral.")
     else:
-        # [IA] Gemini – Cálculo dos 4 KPIs validados individualmente pelo aluno
+        # [IA] Gemini – Cálculo dos 4 KPIs validados pelo aluno
         receita_total_global = df_filtrado["Global_Sales"].sum()
         total_jogos = len(df_filtrado)
         venda_media_jogo = df_filtrado["Global_Sales"].mean() if total_jogos > 0 else 0
         super_hits = df_filtrado[df_filtrado["Global_Sales"] >= 1.0]
         taxa_super_hits = (len(super_hits) / total_jogos * 100) if total_jogos > 0 else 0
 
-        # [IA] Gemini – 4 Cards de Métricas em Destaque com Gradiente Superior e Glassmorphism
+        # [IA] Gemini – 4 Cards de Métricas em Destaque (cores consistentes: indigo, cyan, emerald e amber - sem rosa)
         col_k1, col_k2, col_k3, col_k4 = st.columns(4)
 
         with col_k1:
@@ -521,7 +548,7 @@ with tab_kpi:
             st.markdown(
                 f"""
                 <div class="kpi-container">
-                    <div class="kpi-bar bar-purple"></div>
+                    <div class="kpi-bar bar-amber"></div>
                     <div class="kpi-title">Catálogo Monitorado</div>
                     <div class="kpi-val">{total_jogos:,}</div>
                     <div class="kpi-sub">De {len(df):,} títulos históricos</div>
@@ -532,13 +559,13 @@ with tab_kpi:
 
         st.markdown("")
 
-        # [IA] Gemini – Visual 1 e Visual 2: Top Publicadoras e Market Share Regional
+        # [IA] Gemini – Linha 1: Top 10 Publicadoras (cor sólida, texto legível) + Market Share Regional (Donut com cores consistentes)
         col_pub, col_share = st.columns([1.1, 0.9], gap="medium")
 
         with col_pub:
             with st.container(border=True):
                 st.markdown("#### Top 10 Publicadoras por Faturamento Global")
-                st.caption("Concentração de receita entre os maiores competidores do setor")
+                st.caption("Volume total de vendas dos maiores concorrentes (cor sóbria para melhor contraste com os rótulos).")
 
                 top_publishers = (
                     df_filtrado.groupby("Publisher", as_index=False)["Global_Sales"]
@@ -547,25 +574,29 @@ with tab_kpi:
                     .sort_values("Global_Sales", ascending=True)
                 )
 
+                # Boas práticas: cor uniforme consistente para rótulo legível
                 fig_pubs = px.bar(
                     top_publishers,
                     x="Global_Sales",
                     y="Publisher",
                     orientation="h",
                     text_auto=".1f",
-                    color="Global_Sales",
-                    color_continuous_scale=["#312E81", "#6366F1", "#38BDF8"],
+                    color_discrete_sequence=["#6366F1"],
                     labels={"Publisher": "Publicadora", "Global_Sales": "Vendas Globais ($ mi)"},
                 )
-                fig_pubs.update_traces(hovertemplate="<b>%{y}</b><br>Faturamento: %{x:.2f}M cópias<extra></extra>")
-                fig_pubs.update_coloraxes(showscale=False)
-                format_chart(fig_pubs, height=370)
+                fig_pubs.update_traces(
+                    textposition="inside",
+                    insidetextanchor="middle",
+                    textfont=dict(color="#FFFFFF", size=11, family="Plus Jakarta Sans"),
+                    hovertemplate="<b>%{y}</b><br>Faturamento: %{x:.2f}M cópias<extra></extra>",
+                )
+                format_chart(fig_pubs, height=360)
                 st.plotly_chart(fig_pubs, use_container_width=True)
 
         with col_share:
             with st.container(border=True):
                 st.markdown("#### Market Share por Região de Vendas")
-                st.caption("Composição percentual do faturamento entre mercados geográficos")
+                st.caption("Composição percentual das regiões, utilizando as mesmas cores padronizadas.")
 
                 regioes = {
                     "América do Norte": df_filtrado["NA_Sales"].sum(),
@@ -575,18 +606,14 @@ with tab_kpi:
                 }
                 df_share = pd.DataFrame(list(regioes.items()), columns=["Região", "Vendas"])
 
+                # Cores estritamente padronizadas e sem rosa
                 fig_donut = px.pie(
                     df_share,
                     names="Região",
                     values="Vendas",
                     hole=0.6,
                     color="Região",
-                    color_discrete_map={
-                        "América do Norte": "#6366F1",
-                        "Europa": "#38BDF8",
-                        "Japão": "#10B981",
-                        "Outras Regiões": "#F59E0B",
-                    },
+                    color_discrete_map=REGION_LABELS_PT,
                 )
                 fig_donut.update_traces(
                     textposition="inside",
@@ -594,16 +621,16 @@ with tab_kpi:
                     hovertemplate="<b>%{label}</b>: %{value:.1f}M cópias (%{percent})<extra></extra>",
                     marker=dict(line=dict(color="#0B0F19", width=2.5)),
                 )
-                format_chart(fig_donut, height=370)
+                format_chart(fig_donut, height=360)
                 st.plotly_chart(fig_donut, use_container_width=True)
 
-        # [IA] Gemini – Visual 3 e Visual 4: Eficiência por Gênero e Ranking de Super Hits
-        col_gen_eff, col_table = st.columns([1, 1], gap="medium")
+        # [IA] Gemini – Linha 2: Eficiência por Gênero + Boxplot de Dispersão por Gênero (Movido do Dashboard 1)
+        col_gen_eff, col_box = st.columns([1, 1], gap="medium")
 
         with col_gen_eff:
             with st.container(border=True):
-                st.markdown("#### Eficiência de Gênero: Retorno Médio por Jogo")
-                st.caption("Média de faturamento por lançamento (identifica nichos mais rentáveis)")
+                st.markdown("#### Eficiência por Gênero: Retorno Médio por Jogo")
+                st.caption("Média de faturamento por lançamento (cor sólida suave garantindo contraste com o texto).")
 
                 eficiencia_genero = (
                     df_filtrado.groupby("Genre", as_index=False)
@@ -617,30 +644,113 @@ with tab_kpi:
                     y="Genre",
                     orientation="h",
                     text_auto=".2f",
-                    color="Venda_Media",
-                    color_continuous_scale=["#831843", "#DB2777", "#F472B6"],
+                    color_discrete_sequence=["#38BDF8"],
                     labels={"Genre": "Gênero", "Venda_Media": "Venda Média / Jogo ($ mi)"},
                 )
-                fig_eff.update_traces(hovertemplate="<b>%{y}</b><br>Média por Jogo: %{x:.2f}M<extra></extra>")
-                fig_eff.update_coloraxes(showscale=False)
-                format_chart(fig_eff, height=380)
+                fig_eff.update_traces(
+                    textposition="inside",
+                    insidetextanchor="middle",
+                    textfont=dict(color="#0B0F19", size=11, family="Plus Jakarta Sans"),
+                    hovertemplate="<b>%{y}</b><br>Média por Jogo: %{x:.2f}M<extra></extra>",
+                )
+                format_chart(fig_eff, height=370)
                 st.plotly_chart(fig_eff, use_container_width=True)
 
-        with col_table:
+        with col_box:
             with st.container(border=True):
-                st.markdown("#### Ranking de Super Hits (Top Títulos)")
-                st.caption("Jogos com maior tração comercial e volume de unidades vendidas")
+                st.markdown("#### Comparação de Dispersão por Gênero (Boxplot)")
+                st.caption("Distribuição e quartis de vendas globais por gênero (movido do Dashboard 1).")
 
-                cols_display = ["Name", "Platform", "Publisher", "Year", "Global_Sales", "NA_Sales", "EU_Sales", "JP_Sales"]
-                df_top_hits = df_filtrado.nlargest(10, "Global_Sales")[cols_display].copy()
-                df_top_hits.columns = ["Título", "Plataforma", "Publicadora", "Ano", "Global (M)", "NA (M)", "EU (M)", "JP (M)"]
+                p95_global = df_filtrado["Global_Sales"].quantile(0.95)
+                dados_box_zoom = df_filtrado[df_filtrado["Global_Sales"] <= p95_global]
 
-                st.dataframe(
-                    df_top_hits,
-                    use_container_width=True,
-                    hide_index=True,
-                    height=340,
+                fig_box = px.box(
+                    dados_box_zoom,
+                    x="Genre",
+                    y="Global_Sales",
+                    color_discrete_sequence=["#6366F1"],
+                    labels={"Genre": "Gênero", "Global_Sales": "Vendas Globais (mi)"},
                 )
+                fig_box.update_traces(boxpoints=False)
+                fig_box.update_xaxes(tickangle=-35)
+                format_chart(fig_box, height=370)
+                st.plotly_chart(fig_box, use_container_width=True)
+
+        # [IA] Gemini – Linha 3: Top 10 Plataformas + Evolução Temporal (Movidos do Dashboard 1)
+        col_plat, col_evol = st.columns([1, 1], gap="medium")
+
+        with col_plat:
+            with st.container(border=True):
+                st.markdown("#### Top 10 Plataformas em Faturamento")
+                st.caption("Consoles e plataformas líderes em vendas globais (movido do Dashboard 1).")
+
+                top_plat = (
+                    df_filtrado.groupby("Platform", as_index=False)["Global_Sales"]
+                    .sum()
+                    .nlargest(10, "Global_Sales")
+                    .sort_values("Global_Sales", ascending=True)
+                )
+
+                fig_plat = px.bar(
+                    top_plat,
+                    x="Global_Sales",
+                    y="Platform",
+                    orientation="h",
+                    text_auto=".1f",
+                    color_discrete_sequence=["#38BDF8"],
+                    labels={"Platform": "Plataforma", "Global_Sales": "Vendas Globais (mi)"},
+                )
+                fig_plat.update_traces(
+                    textposition="inside",
+                    insidetextanchor="middle",
+                    textfont=dict(color="#0B0F19", size=11, family="Plus Jakarta Sans"),
+                    hovertemplate="Plataforma: %{y}<br>Total: %{x:.2f}M cópias<extra></extra>",
+                )
+                format_chart(fig_plat, height=360)
+                st.plotly_chart(fig_plat, use_container_width=True)
+
+        with col_evol:
+            with st.container(border=True):
+                st.markdown("#### Evolução Temporal de Vendas Globais")
+                st.caption("Trajetória histórica de lançamentos ao longo dos anos (movido do Dashboard 1).")
+
+                evolucao_anual = (
+                    df_filtrado.groupby("Year", as_index=False)["Global_Sales"]
+                    .sum()
+                    .sort_values("Year")
+                )
+
+                fig_evol = px.area(
+                    evolucao_anual,
+                    x="Year",
+                    y="Global_Sales",
+                    markers=True,
+                    color_discrete_sequence=["#6366F1"],
+                    labels={"Year": "Ano de Lançamento", "Global_Sales": "Vendas Globais (mi)"},
+                )
+                fig_evol.update_traces(
+                    hovertemplate="Ano: %{x}<br>Vendas: %{y:.1f}M<extra></extra>",
+                    line=dict(width=2.5, color="#818CF8"),
+                )
+                fig_evol.update_xaxes(dtick=5)
+                format_chart(fig_evol, height=360)
+                st.plotly_chart(fig_evol, use_container_width=True)
+
+        # [IA] Gemini – Linha 4: Ranking Dinâmico de Super Hits (Tabela Executiva)
+        with st.container(border=True):
+            st.markdown("#### Ranking de Super Hits (Top Títulos)")
+            st.caption("Jogos com maior tração comercial e volume de unidades vendidas no segmento filtrado.")
+
+            cols_display = ["Name", "Platform", "Publisher", "Year", "Global_Sales", "NA_Sales", "EU_Sales", "JP_Sales"]
+            df_top_hits = df_filtrado.nlargest(10, "Global_Sales")[cols_display].copy()
+            df_top_hits.columns = ["Título", "Plataforma", "Publicadora", "Ano", "Global (M)", "NA (M)", "EU (M)", "JP (M)"]
+
+            st.dataframe(
+                df_top_hits,
+                use_container_width=True,
+                hide_index=True,
+                height=310,
+            )
 
 # [IA] Gemini – Rodapé Informativo e Conformidade Acadêmica
 st.markdown("---")

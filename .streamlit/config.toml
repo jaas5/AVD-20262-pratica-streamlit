@@ -1,4 +1,4 @@
-# Configuração do Streamlit - Tema Dark Mode Premium com Gradientes
+# Configuração do Streamlit - Tema Dark Mode Premium com Gradientes (sem tons de rosa)
 [theme]
 base = "dark"
 primaryColor = "#6366F1"
@@ -11,7 +11,7 @@ headingFont = "DM Sans:https://fonts.googleapis.com/css2?family=DM+Sans:wght@400
 paddingTop = "0.75rem"
 baseRadius = "0.75rem"
 showWidgetBorder = true
-chartCategoricalColors = ["#6366F1", "#38BDF8", "#EC4899", "#10B981", "#F59E0B", "#A855F7"]
+chartCategoricalColors = ["#6366F1", "#38BDF8", "#818CF8", "#10B981", "#F59E0B", "#A855F7"]
 
 [theme.sidebar]
 backgroundColor = "#0F1524"

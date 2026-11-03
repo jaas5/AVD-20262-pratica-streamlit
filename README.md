@@ -20,31 +20,33 @@ Desenvolvimento de aplicação interativa analítica baseada no dataset de **Vid
 
 A aplicação está organizada em duas abas integradas, estruturadas na seguinte ordem:
 
-### Dashboard 1: Laboratório de Distribuição e Correlação
-Voltado para cientistas de dados e analistas explorarem as relações estatísticas do dataset:
+### Dashboard 1: Laboratório de Correlação e Distribuição Quantitativa
+Voltado estritamente para a análise das **variáveis quantitativas de vendas** (América do Norte, Europa, Japão, Outras Regiões e Vendas Globais):
 - **Painel Lateral com Filtros Reativos:**
-  - Seletor de variável quantitativa de vendas (`Global_Sales`, `NA_Sales`, `EU_Sales`, `JP_Sales`, `Other_Sales`).
+  - Seletor de variável quantitativa em foco (`NA_Sales`, `EU_Sales`, `JP_Sales`, `Other_Sales`, `Global_Sales`).
   - Slider de intervalo temporal para exclusão de períodos específicos de lançamento.
   - Multiselects para filtragem dinâmica de Plataformas, Gêneros e Publicadoras.
-- **Visualizações Mínimas Obrigatórias e Complementares:**
-  - **Matriz de Correlação (Heatmap):** Cálculo não-paramétrico de Spearman entre todas as variáveis regionais de vendas.
-  - **Histograma de Distribuição Univariada:** Visualização detalhada da variável selecionada, com linha indicadora de mediana e zoom até o percentil 95 para mitigar o impacto visual da assimetria extrema/cauda longa.
-  - **Boxplot por Gênero:** Dispersão e quartis entre os diferentes gêneros de jogos.
-  - **Ranking de Plataformas (Top 10):** Barras horizontais ordenadas pelo volume de vendas na métrica escolhida.
-  - **Evolução Temporal das Vendas:** Gráfico de área interativo mostrando a trajetória anual do faturamento.
+- **Visualizações Quantitativas e Boas Práticas:**
+  - **Matriz de Correlação Triangular (Heatmap):** Cálculo não-paramétrico de Spearman exibindo apenas o triângulo inferior, eliminando a ambiguidade visual de simetria repetida.
+  - **Histograma de Distribuição da Variável Selecionada:** Renderizado na sua respectiva **cor característica fixa**, com corte visual no percentil 95 para tratar a cauda longa de outliers da EDA e linha de mediana vertical destacada.
+  - **Dispersão e Tendência Linear:** Gráfico de dispersão (*scatter plot*) da variável quantitativa em relação às Vendas Globais com reta de tendência linear (*numpy.polyfit*).
+  - **Distribuição Comparativa das Quatro Regiões:** Comparativo visual das quatro variáveis regionais, cada uma com sua respectiva cor padronizada.
 
-### Dashboard 2: Painel Estratégico de KPIs (Público: Publishers)
-Voltado especificamente para **Executivos e Gerentes de Publicação (Game Publishers e Diretores de Estúdio)** apoiarem decisões de alocação de orçamento e portfólio de lançamentos:
+### Dashboard 2: Painel Estratégico de Negócios e KPIs (Público: Publishers)
+Voltado especificamente para **Executivos e Gerentes de Publicação (Publishers)** avaliarem decisões de portfólio, plataformas e concorrência com boas práticas de visualização:
 - **4 Métricas Principais (Cards de KPI com Glassmorphism):**
   1. **Receita Global Total ($ mi):** Faturamento acumulado no recorte filtrado.
   2. **Venda Média por Lançamento ($ mi/jogo):** Benchmark de produtividade unitária por título.
   3. **Taxa de Super Hits (%):** Proporção de títulos que romperam a barreira de 1 milhão de cópias vendidas.
   4. **Catálogo Mapeado:** Contagem total de jogos monitorados.
-- **4 Visuais Estratégicos:**
-  1. **Top 10 Publicadoras por Faturamento Global:** Gráfico de barras horizontais detalhando a concentração de receita nos grandes concorrentes.
-  2. **Market Share Regional de Vendas:** Gráfico de rosca (*donut*) com fatias percentuais de América do Norte, Europa, Japão e Outras Regiões.
-  3. **Eficiência de Gênero (Venda Média por Jogo):** Comparativo de rentabilidade média por título lançado entre os gêneros.
-  4. **Ranking Dinâmico de Super Hits:** Tabela interativa dos maiores sucessos históricos com detalhes de vendas regionais.
+- **Visuais Estratégicos e de Mercado:**
+  1. **Top 10 Publicadoras por Faturamento Global:** Gráfico de barras horizontais em tom uniforme e rótulos de texto de alto contraste.
+  2. **Market Share Regional de Vendas:** Gráfico de rosca (*donut*) com fatias percentuais utilizando rigorosamente as **mesmas cores características** padronizadas das regiões (sem rosa).
+  3. **Eficiência de Gênero (Venda Média por Jogo):** Comparativo de rentabilidade média unitária entre os gêneros.
+  4. **Comparação por Gênero (Boxplot):** Dispersão e quartis de vendas globais por gênero (migrado do Dashboard 1).
+  5. **Top 10 Plataformas em Faturamento:** Consoles líderes em faturamento global (migrado do Dashboard 1).
+  6. **Evolução Temporal de Vendas Globais:** Trajetória histórica anual de lançamentos e receita (migrado do Dashboard 1).
+  7. **Ranking Dinâmico de Super Hits:** Tabela interativa dos maiores sucessos históricos com dados de plataforma e publicadora.
 
 ---
 
