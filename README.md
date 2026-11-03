@@ -1,105 +1,114 @@
-# AVD-20262-pratica-streamlit
+# AVD-20262-pratica-streamlit — Video Game Analytics
 
-Repositório utilizado para aula prática relacionada a Streamlit na disciplina Análise e Visualização de Dados da Cesar School no período de 2026.2.
+Repositório da atividade prática de **Streamlit** da disciplina **Análise e Visualização de Dados (AVD 2026.2)** da **Cesar School**.
 
-Repositório-modelo das Aulas 21, 22 e 23: construção de dois dashboards em Streamlit a partir da EDA desenvolvida em sala. O deploy dos dashbords ocorrerá via Streamlit Community Cloud e serão os seguintes:
+Desenvolvimento de aplicação interativa analítica baseada no dataset de **Video Game Sales**, construída com **Streamlit**, **Plotly** e **Pandas** a partir da Análise Exploratória de Dados (EDA) desenvolvida em aula.
 
-- Dashboard 1 = correlação + distribuição das variáveis quantitativas
-- Dashboard 2 = KPIs
+---
 
-## Setup
+## 🚀 Link da Aplicação no Streamlit Community Cloud
 
-Requer **Python 3.11 a 3.15**. Confira a sua versão antes de começar:
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://avd-20262-pratica-streamlit.streamlit.app)
 
-| Sistema | Verificar versão |
-| --- | --- |
-| macOS / Linux | `python3 --version` |
-| Windows | `py --version` |
+> **Link do App:** [https://avd-20262-pratica-streamlit.streamlit.app](https://avd-20262-pratica-streamlit.streamlit.app)  
+> *(Caso ainda esteja realizando o primeiro deploy, basta conectar este repositório no [share.streamlit.io](https://share.streamlit.io/) selecionando `app.py` como arquivo principal).*
+
+**Link do Repositório GitHub:** [https://github.com/jaas5/AVD-20262-pratica-streamlit](https://github.com/jaas5/AVD-20262-pratica-streamlit)
+
+---
+
+## 📊 Estrutura dos Dashboards
+
+A aplicação está organizada em duas abas integradas, permitindo alternar entre uma visão científica e uma visão executiva:
+
+### 🔬 Dashboard 1: Laboratório de Distribuição e Correlação
+Voltado para cientistas de dados e analistas explorarem as relações estatísticas do dataset:
+- **Painel Lateral com Filtros Reativos:**
+  - Seletor de variável quantitativa de vendas (`Global_Sales`, `NA_Sales`, `EU_Sales`, `JP_Sales`, `Other_Sales`).
+  - Slider de intervalo temporal para exclusão de períodos específicos de lançamento.
+  - Multiselects para filtragem dinâmica de Plataformas, Gêneros e Publicadoras.
+- **Visualizações Mínimas Obrigatórias e Complementares:**
+  - **Matriz de Correlação (Heatmap):** Cálculo não-paramétrico de Spearman entre todas as variáveis regionais de vendas.
+  - **Histograma de Distribuição Univariada:** Visualização detalhada da variável selecionada, com linha indicadora de mediana e zoom até o percentil 95 para mitigar o impacto visual da assimetria extrema/cauda longa.
+  - **Boxplot por Gênero:** Dispersão e quartis entre os diferentes gêneros de jogos.
+  - **Ranking de Plataformas (Top 10):** Barras horizontais ordenadas pelo volume de vendas na métrica escolhida.
+  - **Evolução Temporal das Vendas:** Gráfico de área interativo mostrando a trajetória anual do faturamento.
+
+### 🎯 Dashboard 2: Painel Estratégico de KPIs (Público: Publishers)
+Voltado especificamente para **Executivos e Gerentes de Publicação (Game Publishers e Diretores de Estúdio)** apoiarem decisões de alocação de orçamento e portfólio de lançamentos:
+- **4 Métricas Principais (Cards de KPI):**
+  1. **Receita Global Total ($ mi):** Faturamento acumulado no recorte filtrado.
+  2. **Venda Média por Lançamento ($ mi/jogo):** Benchmark de produtividade unitária por título.
+  3. **Taxa de Super Hits (%):** Proporção de títulos que romperam a barreira de 1 milhão de cópias vendidas.
+  4. **Catálogo Mapeado:** Contagem total de jogos monitorados.
+- **4 Visuais Estratégicos:**
+  1. **Top 10 Publicadoras por Faturamento Global:** Gráfico de barras horizontais detalhando a concentração de receita nos grandes concorrentes.
+  2. **Market Share Regional de Vendas:** Gráfico de rosca (*donut*) com fatias percentuais de América do Norte, Europa, Japão e Outras Regiões.
+  3. **Eficiência de Gênero (Venda Média por Jogo):** Comparativo de rentabilidade média por título lançado entre os gêneros.
+  4. **Ranking Dinâmico de Super Hits:** Tabela interativa dos maiores sucessos históricos com detalhes de vendas regionais.
+
+---
+
+## 📁 Estrutura de Arquivos e Entregáveis
+
+```text
+AVD-20262-pratica-streamlit/
+├── .streamlit/
+│   └── config.toml               # Identidade visual, tipografia e paleta minimalista
+├── data/
+│   ├── raw/                      # Dataset original (ignorado no git)
+│   └── clean/
+│       └── dataset.csv           # Dataset tratado na EDA e versionado para o deploy
+├── entregas/
+│   ├── rascunho_dashboard1.png   # Rascunho visual do Dashboard 1
+│   ├── rascunho_dashboard2.png   # Rascunho visual do Dashboard 2
+│   └── justificativa-metricas.md # Documento formal de justificativa do público e métricas
+├── notebooks/
+│   └── eda.ipynb                 # Notebook completo com a Análise Exploratória de Dados
+├── prompts/
+│   ├── declaracao-uso-ia.md      # Registro detalhado da utilização de ferramentas de IA
+│   ├── layout-skeleton-prompt.md # Template de prompt do rascunho ao código
+│   ├── rascunho_dashboard1.png   # Cópia do rascunho 1
+│   ├── rascunho_dashboard2.png   # Cópia do rascunho 2
+│   └── referencia_visual.jpg     # Referência estética de design moderno
+├── src/
+│   ├── __init__.py
+│   └── data_loader.py            # Função unificada de carga de dados com cache @st.cache_data
+├── app.py                        # Aplicação completa com os dois dashboards em abas
+├── README.md                     # Documentação do projeto e instruções
+└── requirements.txt              # Dependências do projeto
+```
+
+---
+
+## 🛠️ Como Executar Localmente
 
 ### 1. Criar e ativar o ambiente virtual
 
-O nome do comando do Python muda por sistema (em muitas máquinas `python` nem existe). Use a linha do seu sistema:
+**Windows (PowerShell):**
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
 
-| Sistema | Criar | Ativar |
-| --- | --- | --- |
-| macOS / Linux | `python3 -m venv .venv` | `source .venv/bin/activate` |
-| Windows (PowerShell) | `py -m venv .venv` | `.venv\Scripts\Activate.ps1` |
-| Windows (cmd) | `py -m venv .venv` | `.venv\Scripts\activate.bat` |
+**macOS / Linux:**
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
 
-Se você tem várias versões instaladas, escolha uma compatível, por exemplo `python3.12 -m venv .venv` (macOS/Linux) ou `py -3.12 -m venv .venv` (Windows).
-
-Com o ambiente ativo, o terminal mostra `(.venv)` no início da linha. **A partir daqui os comandos são iguais em todos os sistemas**, porque dentro do venv `python` e `pip` sempre existem.
-
-### 2. Instalar, configurar a IA e rodar
+### 2. Instalar dependências e rodar
 
 ```bash
 python -m pip install -r requirements.txt
-
-# Skills de IA do Streamlit (ver seção "IA neste projeto")
-streamlit skills --yes
-
 streamlit run app.py
 ```
 
-### Problemas comuns
+---
 
-- **`python: command not found` / `python` não é reconhecido:** use `python3` (macOS/Linux) ou `py` (Windows) só para criar o venv; depois de ativado, `python` funciona.
-- **Linux (Debian/Ubuntu): `ensurepip is not available` ou `No module named venv`:** instale `sudo apt install python3-venv` (ou `python3.X-venv` para a sua versão).
-- **Windows: "a execução de scripts foi desabilitada" ao ativar no PowerShell:** rode uma vez `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, ou use o cmd.
-- **Python fora de 3.11–3.15:** instale uma versão compatível em [python.org](https://www.python.org/downloads/) e crie o venv com ela, como no exemplo acima.
-- **Apareceu `ModuleNotFoundError` ou `streamlit: command not found`:** o venv provavelmente não está ativo. Ative de novo e confira o `(.venv)` no prompt.
-- **Erro de certificado no `pip install` (macOS, Python do python.org):** rode `Install Certificates.command`, na pasta Python 3.X em Aplicativos.
-- **`DatasetNotFoundError` ao baixar o dataset no notebook (macOS, Python do python.org):** é o mesmo problema de certificado SSL (o `pandas` não consegue ler o CSV da UCI). Rode `Install Certificates.command` e reinicie o kernel. O notebook `eda-com-downloads.ipynb` já define `SSL_CERT_FILE` com o `certifi` como contorno.
+## 🤖 Declaração de Uso de IA Generativa
 
-## Estrutura de dados: `data/raw` vs `data/clean`
-
-- `data/raw/`: o dataset **bruto**, como foi baixado. Nunca é editado à mão.
-- `data/clean/`: o dataset **já tratado**, exportado na última célula do notebook de EDA (ex.: `df.to_csv("data/clean/dataset.csv", index=False)`). O `app.py` lê **somente** desta pasta, via `src/data_loader.py`.
-
-### O que vai para o Git
-
-| Pasta | Versionada? | Por quê |
-| --- | --- | --- |
-| `data/raw/` | **Não** (só o `.gitkeep`) | O bruto pode ser grande ou ter dados sensíveis, e o app não o usa. |
-| `data/clean/` | **Sim** | O Streamlit Community Cloud faz deploy a partir do GitHub e só enxerga o que está no repositório. Sem o CSV tratado no repo, o app funciona na sua máquina e **quebra no deploy**. |
-
-### Antes de dar `git push` com o dado tratado
-
-- **O dado é público ou pode ser compartilhado?** Se não for claramente público, use um **repositório privado** (o Community Cloud permite conectar repositórios privados ao autorizar o GitHub; confirme na hora do deploy). Nesse caso, dê acesso de leitura ao professor (como colaborador ou pela organização).
-- **Dado sensível** (nomes, CPF, e-mail, telefone, localização exata etc.): remova ou anonimize na EDA, antes de exportar para `data/clean/`. Isso vale mesmo em repositório privado.
-- **Tamanho:** o GitHub rejeita arquivos acima de **100 MB**. Se o CSV tratado for grande, reduza colunas e linhas na EDA ou exporte em Parquet (`df.to_parquet(...)`, exige `pyarrow`).
-- **Lembre de commitar o arquivo:** confira com `git status` que `data/clean/dataset.csv` aparece como novo arquivo.
-
-## Passo a passo
-
-1. Substitua `notebooks/eda.ipynb` pelo seu notebook de EDA (Aula 11) e exporte o dado tratado para `data/clean/`.
-2. Construa o `app.py` em cima do esqueleto (sidebar, filtros, Dashboard 1 e Dashboard 2).
-3. Faça o deploy no Streamlit Community Cloud (Aula 23).
-
-## IA neste projeto
-
-Este projeto usa o **streamlit skills**: um conjunto de instruções (arquivos `SKILL.md`) que a ferramenta de IA lê para escrever código Streamlit seguindo boas práticas (estrutura de layout, cache, widgets, etc.).
-
-**Como instalar:** depois do `pip install -r requirements.txt`, rode na raiz do projeto:
-
-```bash
-streamlit skills        # interativo
-streamlit skills --yes  # sem confirmações
-```
-
-O comando cria *symlinks* para as skills que acompanham a sua instalação do Streamlit, então elas se atualizam sozinhas quando você atualiza o pacote. (A opção `--global` instala para todos os projetos, em vez de só este.)
-
-**Onde fica instalado:**
-
-- `.claude/skills/`: lido pelo Claude Code.
-- `.agents/skills/`: lido pelo Gemini CLI, que já encontra essa pasta sozinho.
-
-Essas pastas **não são versionadas** (ver `.gitignore`): os symlinks apontam para o seu ambiente virtual e não funcionam em outra máquina. Cada pessoa roda `streamlit skills` no próprio clone.
-
-**Se você usa outra ferramenta** (ChatGPT, Copilot Chat, etc.): abra o `SKILL.md` correspondente em `.agents/skills/` e cole o conteúdo manualmente no início do chat, antes do seu pedido.
-
-O uso de IA deve ser declarado conforme a seção abaixo.
-
-## Pasta `prompts/`
-
-A pasta [prompts/](prompts/) guarda o template de prompt para transformar o rascunho de layout em esqueleto de código e a **Declaração de Uso de IA** exigida pelo Plano de Ensino. Veja [prompts/README.md](prompts/README.md).
+O uso de Inteligência Artificial Generativa neste projeto segue rigorosamente o Plano de Ensino e a Política de Transparência da disciplina:
+- **Transparência no Código:** Todo trecho gerado ou aprimorado com apoio de IA está expressamente identificado no código-fonte com a marcação `# [IA] <ferramenta> – <finalidade>`.
+- **Autoria Individual das Decisões:** A definição do público-alvo (Publishers), a escolha das métricas (KPIs), as fórmulas de cálculo e a interpretação dos dados foram definidas e validadas individualmente pelo autor do projeto, conforme registrado em `entregas/justificativa-metricas.md`.
+- **Registro Detalhado:** Todos os prompts, aceites e alterações encontram-se documentados em `prompts/declaracao-uso-ia.md`.

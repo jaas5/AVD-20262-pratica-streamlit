@@ -2,19 +2,20 @@
 # O tema pode ser trocado pelo menu ⋮ → Settings → Choose app theme.
 
 [theme]
-paddingTop = "0.5rem"     # espaço abaixo da barra do topo (valor entre aspas)
-# font = "sans serif"     # "sans serif", "serif" ou "monospace"
+base = "light"
+font = "DM Sans:https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
+headingFont = "DM Sans:https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
+paddingTop = "0.5rem"
+baseRadius = "0.5rem"
+showWidgetBorder = true
+chartCategoricalColors = ["#638CA0", "#C98279", "#8DAA91", "#C4A56E", "#8D8BA8"]
+primaryColor = "#638CA0"
+backgroundColor = "#F7F9F9"
+secondaryBackgroundColor = "#EEF2F3"
+textColor = "#27343A"
+borderColor = "#DCE4E6"
 
-[theme.light]
-primaryColor = "#ff4b4b"            # cor de destaque (widgets, links)
-backgroundColor = "#ffffff"         # fundo da página
-secondaryBackgroundColor = "#f0f2f6"  # fundo da sidebar e de widgets
-textColor = "#31333f"               # cor do texto
-borderColor = "#d5dae5"
-
-[theme.dark]
-primaryColor = "#ff4b4b"
-backgroundColor = "#0e1117"
-secondaryBackgroundColor = "#262730"
-textColor = "#fafafa"
-borderColor = "#41444e"
+[theme.sidebar]
+backgroundColor = "#EEF2F3"
+textColor = "#34434B"
+borderColor = "#DCE4E6"
