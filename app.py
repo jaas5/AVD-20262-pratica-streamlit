@@ -6,10 +6,10 @@ import plotly.graph_objects as go
 
 from src.data_loader import load_data
 
-# [IA] Gemini – Configuração da página e metadados no padrão do Streamlit
+# [IA] Gemini – Configuração da página e metadados no padrão do Streamlit (sem emojis)
 st.set_page_config(
     page_title="Video Game Analytics | Dark Edition",
-    page_icon="🎮",
+    page_icon=":material/analytics:",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -223,14 +223,14 @@ if "Year" in df.columns:
     df["Year"] = df["Year"].astype(int)
 
 # ---------------------------------------------------------
-# [IA] Gemini – Sidebar: Controles e Filtros Interativos
+# [IA] Gemini – Sidebar: Controles e Filtros Interativos (sem emojis)
 # ---------------------------------------------------------
 with st.sidebar:
-    st.markdown("## 🎮 **Game Analytics**")
-    st.caption("Painel Executivo & Laboratório de Dados")
+    st.markdown("## **Game Analytics**")
+    st.caption("Painel Executivo e Laboratório de Dados")
     st.markdown("---")
 
-    st.markdown("### ⚙️ **Filtros Globais**")
+    st.markdown("### **Filtros Globais**")
 
     # Filtro obrigatório de intervalo (Slider)
     ano_min, ano_max = int(df["Year"].min()), int(df["Year"].max())
@@ -267,7 +267,7 @@ with st.sidebar:
 
     st.markdown("---")
     # Filtro obrigatório do Dashboard 1: Seletor de Variável Quantitativa
-    st.markdown("### 🔬 **Variável de Análise (Lab)**")
+    st.markdown("### **Variável de Análise (Lab)**")
     variavel_analise = st.radio(
         "Selecione a região/métrica de vendas:",
         options=SALES_COLUMNS,
@@ -277,7 +277,7 @@ with st.sidebar:
     )
 
     st.markdown("---")
-    st.caption("💡 *Dica:* Utilize os filtros acima para simular nichos e períodos específicos.")
+    st.caption("*Dica:* Utilize os filtros acima para simular nichos e períodos específicos.")
 
 # [IA] Gemini – Aplicação dos filtros reativos no DataFrame
 df_filtrado = df[df["Year"].between(intervalo_anos[0], intervalo_anos[1])]
@@ -289,7 +289,7 @@ if publicadoras_selecionadas:
     df_filtrado = df_filtrado[df_filtrado["Publisher"].isin(publicadoras_selecionadas)]
 
 # ---------------------------------------------------------
-# [IA] Gemini – Cabeçalho Principal Estilizado
+# [IA] Gemini – Cabeçalho Principal Estilizado (sem emojis)
 # ---------------------------------------------------------
 st.markdown('<div class="hero-title">Video Game Intelligence Hub</div>', unsafe_allow_html=True)
 st.markdown(
@@ -298,211 +298,25 @@ st.markdown(
 )
 
 # ---------------------------------------------------------
-# [IA] Gemini – Estrutura Principal: Abas dos 2 Dashboards
+# [IA] Gemini – Estrutura Principal: Abas dos 2 Dashboards (Dashboard 1 antes do Dashboard 2)
 # ---------------------------------------------------------
-tab_kpi, tab_lab = st.tabs([
-    "🎯 Dashboard 2: Painel Estratégico de KPIs (Publishers)",
-    "🔬 Dashboard 1: Laboratório de Distribuição & Correlação",
+tab_lab, tab_kpi = st.tabs([
+    "Dashboard 1: Laboratório de Distribuição e Correlação",
+    "Dashboard 2: Painel Estratégico de KPIs (Publishers)",
 ])
-
-# =========================================================
-# DASHBOARD 2: PAINEL ESTRATÉGICO DE KPIS (PUBLISHERS)
-# =========================================================
-with tab_kpi:
-    st.markdown("### 🎯 Visão Executiva & Indicadores de Negócio")
-    st.caption(
-        "Painel desenvolvido para **Executivos e Gerentes de Publicação (Publishers)** "
-        "com foco em alocação de investimento, rentabilidade de catálogo e mitigação de risco."
-    )
-
-    if df_filtrado.empty:
-        st.warning("⚠️ Nenhum registro encontrado para a combinação de filtros selecionada. Ajuste as opções na barra lateral.")
-    else:
-        # [IA] Gemini – Cálculo dos 4 KPIs validados individualmente pelo aluno
-        receita_total_global = df_filtrado["Global_Sales"].sum()
-        total_jogos = len(df_filtrado)
-        venda_media_jogo = df_filtrado["Global_Sales"].mean() if total_jogos > 0 else 0
-        super_hits = df_filtrado[df_filtrado["Global_Sales"] >= 1.0]
-        taxa_super_hits = (len(super_hits) / total_jogos * 100) if total_jogos > 0 else 0
-
-        # [IA] Gemini – 4 Cards de Métricas em Destaque com Gradiente Superior e Glassmorphism
-        col_k1, col_k2, col_k3, col_k4 = st.columns(4)
-
-        with col_k1:
-            st.markdown(
-                f"""
-                <div class="kpi-container">
-                    <div class="kpi-bar bar-indigo"></div>
-                    <div class="kpi-title">Receita Global Total</div>
-                    <div class="kpi-val">{receita_total_global:,.1f}M</div>
-                    <div class="kpi-sub">Faturamento acumulado ($ mi)</div>
-                </div>
-                """.replace(",", "."),
-                unsafe_allow_html=True,
-            )
-
-        with col_k2:
-            st.markdown(
-                f"""
-                <div class="kpi-container">
-                    <div class="kpi-bar bar-cyan"></div>
-                    <div class="kpi-title">Venda Média / Jogo</div>
-                    <div class="kpi-val">{venda_media_jogo:.2f}M</div>
-                    <div class="kpi-sub">Benchmark de retorno unitário</div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
-
-        with col_k3:
-            st.markdown(
-                f"""
-                <div class="kpi-container">
-                    <div class="kpi-bar bar-emerald"></div>
-                    <div class="kpi-title">Taxa de Super Hits</div>
-                    <div class="kpi-val">{taxa_super_hits:.1f}%</div>
-                    <div class="kpi-sub">{len(super_hits):,} títulos > 1M de vendas</div>
-                </div>
-                """.replace(",", "."),
-                unsafe_allow_html=True,
-            )
-
-        with col_k4:
-            st.markdown(
-                f"""
-                <div class="kpi-container">
-                    <div class="kpi-bar bar-purple"></div>
-                    <div class="kpi-title">Catálogo Monitorado</div>
-                    <div class="kpi-val">{total_jogos:,}</div>
-                    <div class="kpi-sub">De {len(df):,} títulos históricos</div>
-                </div>
-                """.replace(",", "."),
-                unsafe_allow_html=True,
-            )
-
-        st.markdown("")
-
-        # [IA] Gemini – Visual 1 e Visual 2: Top Publicadoras e Market Share Regional
-        col_pub, col_share = st.columns([1.1, 0.9], gap="medium")
-
-        with col_pub:
-            with st.container(border=True):
-                st.markdown("#### 🏆 Top 10 Publicadoras por Faturamento Global")
-                st.caption("Concentração de receita entre os maiores competidores do setor")
-
-                top_publishers = (
-                    df_filtrado.groupby("Publisher", as_index=False)["Global_Sales"]
-                    .sum()
-                    .nlargest(10, "Global_Sales")
-                    .sort_values("Global_Sales", ascending=True)
-                )
-
-                fig_pubs = px.bar(
-                    top_publishers,
-                    x="Global_Sales",
-                    y="Publisher",
-                    orientation="h",
-                    text_auto=".1f",
-                    color="Global_Sales",
-                    color_continuous_scale=["#312E81", "#6366F1", "#38BDF8"],
-                    labels={"Publisher": "Publicadora", "Global_Sales": "Vendas Globais ($ mi)"},
-                )
-                fig_pubs.update_traces(hovertemplate="<b>%{y}</b><br>Faturamento: %{x:.2f}M cópias<extra></extra>")
-                fig_pubs.update_coloraxes(showscale=False)
-                format_chart(fig_pubs, height=370)
-                st.plotly_chart(fig_pubs, use_container_width=True)
-
-        with col_share:
-            with st.container(border=True):
-                st.markdown("#### 🌍 Market Share por Região de Vendas")
-                st.caption("Composição percentual do faturamento entre mercados geográficos")
-
-                regioes = {
-                    "América do Norte": df_filtrado["NA_Sales"].sum(),
-                    "Europa": df_filtrado["EU_Sales"].sum(),
-                    "Japão": df_filtrado["JP_Sales"].sum(),
-                    "Outras Regiões": df_filtrado["Other_Sales"].sum(),
-                }
-                df_share = pd.DataFrame(list(regioes.items()), columns=["Região", "Vendas"])
-
-                fig_donut = px.pie(
-                    df_share,
-                    names="Região",
-                    values="Vendas",
-                    hole=0.6,
-                    color="Região",
-                    color_discrete_map={
-                        "América do Norte": "#6366F1",
-                        "Europa": "#38BDF8",
-                        "Japão": "#10B981",
-                        "Outras Regiões": "#F59E0B",
-                    },
-                )
-                fig_donut.update_traces(
-                    textposition="inside",
-                    textinfo="percent+label",
-                    hovertemplate="<b>%{label}</b>: %{value:.1f}M cópias (%{percent})<extra></extra>",
-                    marker=dict(line=dict(color="#0B0F19", width=2.5)),
-                )
-                format_chart(fig_donut, height=370)
-                st.plotly_chart(fig_donut, use_container_width=True)
-
-        # [IA] Gemini – Visual 3 e Visual 4: Eficiência por Gênero e Ranking de Super Hits
-        col_gen_eff, col_table = st.columns([1, 1], gap="medium")
-
-        with col_gen_eff:
-            with st.container(border=True):
-                st.markdown("#### 💡 Eficiência de Gênero: Retorno Médio por Jogo")
-                st.caption("Média de faturamento por lançamento (identifica nichos mais rentáveis)")
-
-                eficiencia_genero = (
-                    df_filtrado.groupby("Genre", as_index=False)
-                    .agg(Venda_Media=("Global_Sales", "mean"), Quantidade=("Global_Sales", "count"))
-                    .sort_values("Venda_Media", ascending=True)
-                )
-
-                fig_eff = px.bar(
-                    eficiencia_genero,
-                    x="Venda_Media",
-                    y="Genre",
-                    orientation="h",
-                    text_auto=".2f",
-                    color="Venda_Media",
-                    color_continuous_scale=["#831843", "#DB2777", "#F472B6"],
-                    labels={"Genre": "Gênero", "Venda_Media": "Venda Média / Jogo ($ mi)"},
-                )
-                fig_eff.update_traces(hovertemplate="<b>%{y}</b><br>Média por Jogo: %{x:.2f}M<extra></extra>")
-                fig_eff.update_coloraxes(showscale=False)
-                format_chart(fig_eff, height=380)
-                st.plotly_chart(fig_eff, use_container_width=True)
-
-        with col_table:
-            with st.container(border=True):
-                st.markdown("#### ⭐ Ranking de Super Hits (Top Títulos)")
-                st.caption("Jogos com maior tração comercial e volume de unidades vendidas")
-
-                cols_display = ["Name", "Platform", "Publisher", "Year", "Global_Sales", "NA_Sales", "EU_Sales", "JP_Sales"]
-                df_top_hits = df_filtrado.nlargest(10, "Global_Sales")[cols_display].copy()
-                df_top_hits.columns = ["Título", "Plataforma", "Publicadora", "Ano", "Global (M)", "NA (M)", "EU (M)", "JP (M)"]
-
-                st.dataframe(
-                    df_top_hits,
-                    use_container_width=True,
-                    hide_index=True,
-                    height=340,
-                )
 
 # =========================================================
 # DASHBOARD 1: LABORATÓRIO DE DISTRIBUIÇÃO E CORRELAÇÃO
 # =========================================================
 with tab_lab:
-    st.markdown("### 🔬 Laboratório de Análise Exploratória")
+    st.markdown("### Laboratório de Análise Exploratória")
     st.caption(
-        f"Avaliando a métrica quantitativa **{SALES_LABELS[variavel_analise]}** sob diferentes prismas estatísticos."
+        f"Avaliando a métrica quantitativa **{SALES_LABELS[variavel_analise]}** sob diferentes prismas estatísticos. "
+        f"({len(df_filtrado):,} de {len(df):,} jogos filtrados)".replace(",", ".")
     )
 
     if df_filtrado.empty:
-        st.warning("⚠️ Nenhum registro encontrado para a combinação de filtros selecionada.")
+        st.warning("Nenhum registro encontrado para a combinação de filtros selecionada. Ajuste as opções na barra lateral.")
     else:
         # [IA] Gemini – Linha 1: Heatmap de Correlação + Histograma de Distribuição Univariada
         col_corr, col_dist = st.columns([1, 1], gap="medium")
@@ -640,9 +454,197 @@ with tab_lab:
             format_chart(fig_evol, height=310)
             st.plotly_chart(fig_evol, use_container_width=True)
 
+
+# =========================================================
+# DASHBOARD 2: PAINEL ESTRATÉGICO DE KPIS (PUBLISHERS)
+# =========================================================
+with tab_kpi:
+    st.markdown("### Visão Executiva e Indicadores de Negócio")
+    st.caption(
+        "Painel desenvolvido para **Executivos e Gerentes de Publicação (Publishers)** "
+        "com foco em alocação de investimento, rentabilidade de catálogo e mitigação de risco."
+    )
+
+    if df_filtrado.empty:
+        st.warning("Nenhum registro encontrado para a combinação de filtros selecionada. Ajuste as opções na barra lateral.")
+    else:
+        # [IA] Gemini – Cálculo dos 4 KPIs validados individualmente pelo aluno
+        receita_total_global = df_filtrado["Global_Sales"].sum()
+        total_jogos = len(df_filtrado)
+        venda_media_jogo = df_filtrado["Global_Sales"].mean() if total_jogos > 0 else 0
+        super_hits = df_filtrado[df_filtrado["Global_Sales"] >= 1.0]
+        taxa_super_hits = (len(super_hits) / total_jogos * 100) if total_jogos > 0 else 0
+
+        # [IA] Gemini – 4 Cards de Métricas em Destaque com Gradiente Superior e Glassmorphism
+        col_k1, col_k2, col_k3, col_k4 = st.columns(4)
+
+        with col_k1:
+            st.markdown(
+                f"""
+                <div class="kpi-container">
+                    <div class="kpi-bar bar-indigo"></div>
+                    <div class="kpi-title">Receita Global Total</div>
+                    <div class="kpi-val">{receita_total_global:,.1f}M</div>
+                    <div class="kpi-sub">Faturamento acumulado ($ mi)</div>
+                </div>
+                """.replace(",", "."),
+                unsafe_allow_html=True,
+            )
+
+        with col_k2:
+            st.markdown(
+                f"""
+                <div class="kpi-container">
+                    <div class="kpi-bar bar-cyan"></div>
+                    <div class="kpi-title">Venda Média / Jogo</div>
+                    <div class="kpi-val">{venda_media_jogo:.2f}M</div>
+                    <div class="kpi-sub">Benchmark de retorno unitário</div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
+        with col_k3:
+            st.markdown(
+                f"""
+                <div class="kpi-container">
+                    <div class="kpi-bar bar-emerald"></div>
+                    <div class="kpi-title">Taxa de Super Hits</div>
+                    <div class="kpi-val">{taxa_super_hits:.1f}%</div>
+                    <div class="kpi-sub">{len(super_hits):,} títulos > 1M de vendas</div>
+                </div>
+                """.replace(",", "."),
+                unsafe_allow_html=True,
+            )
+
+        with col_k4:
+            st.markdown(
+                f"""
+                <div class="kpi-container">
+                    <div class="kpi-bar bar-purple"></div>
+                    <div class="kpi-title">Catálogo Monitorado</div>
+                    <div class="kpi-val">{total_jogos:,}</div>
+                    <div class="kpi-sub">De {len(df):,} títulos históricos</div>
+                </div>
+                """.replace(",", "."),
+                unsafe_allow_html=True,
+            )
+
+        st.markdown("")
+
+        # [IA] Gemini – Visual 1 e Visual 2: Top Publicadoras e Market Share Regional
+        col_pub, col_share = st.columns([1.1, 0.9], gap="medium")
+
+        with col_pub:
+            with st.container(border=True):
+                st.markdown("#### Top 10 Publicadoras por Faturamento Global")
+                st.caption("Concentração de receita entre os maiores competidores do setor")
+
+                top_publishers = (
+                    df_filtrado.groupby("Publisher", as_index=False)["Global_Sales"]
+                    .sum()
+                    .nlargest(10, "Global_Sales")
+                    .sort_values("Global_Sales", ascending=True)
+                )
+
+                fig_pubs = px.bar(
+                    top_publishers,
+                    x="Global_Sales",
+                    y="Publisher",
+                    orientation="h",
+                    text_auto=".1f",
+                    color="Global_Sales",
+                    color_continuous_scale=["#312E81", "#6366F1", "#38BDF8"],
+                    labels={"Publisher": "Publicadora", "Global_Sales": "Vendas Globais ($ mi)"},
+                )
+                fig_pubs.update_traces(hovertemplate="<b>%{y}</b><br>Faturamento: %{x:.2f}M cópias<extra></extra>")
+                fig_pubs.update_coloraxes(showscale=False)
+                format_chart(fig_pubs, height=370)
+                st.plotly_chart(fig_pubs, use_container_width=True)
+
+        with col_share:
+            with st.container(border=True):
+                st.markdown("#### Market Share por Região de Vendas")
+                st.caption("Composição percentual do faturamento entre mercados geográficos")
+
+                regioes = {
+                    "América do Norte": df_filtrado["NA_Sales"].sum(),
+                    "Europa": df_filtrado["EU_Sales"].sum(),
+                    "Japão": df_filtrado["JP_Sales"].sum(),
+                    "Outras Regiões": df_filtrado["Other_Sales"].sum(),
+                }
+                df_share = pd.DataFrame(list(regioes.items()), columns=["Região", "Vendas"])
+
+                fig_donut = px.pie(
+                    df_share,
+                    names="Região",
+                    values="Vendas",
+                    hole=0.6,
+                    color="Região",
+                    color_discrete_map={
+                        "América do Norte": "#6366F1",
+                        "Europa": "#38BDF8",
+                        "Japão": "#10B981",
+                        "Outras Regiões": "#F59E0B",
+                    },
+                )
+                fig_donut.update_traces(
+                    textposition="inside",
+                    textinfo="percent+label",
+                    hovertemplate="<b>%{label}</b>: %{value:.1f}M cópias (%{percent})<extra></extra>",
+                    marker=dict(line=dict(color="#0B0F19", width=2.5)),
+                )
+                format_chart(fig_donut, height=370)
+                st.plotly_chart(fig_donut, use_container_width=True)
+
+        # [IA] Gemini – Visual 3 e Visual 4: Eficiência por Gênero e Ranking de Super Hits
+        col_gen_eff, col_table = st.columns([1, 1], gap="medium")
+
+        with col_gen_eff:
+            with st.container(border=True):
+                st.markdown("#### Eficiência de Gênero: Retorno Médio por Jogo")
+                st.caption("Média de faturamento por lançamento (identifica nichos mais rentáveis)")
+
+                eficiencia_genero = (
+                    df_filtrado.groupby("Genre", as_index=False)
+                    .agg(Venda_Media=("Global_Sales", "mean"), Quantidade=("Global_Sales", "count"))
+                    .sort_values("Venda_Media", ascending=True)
+                )
+
+                fig_eff = px.bar(
+                    eficiencia_genero,
+                    x="Venda_Media",
+                    y="Genre",
+                    orientation="h",
+                    text_auto=".2f",
+                    color="Venda_Media",
+                    color_continuous_scale=["#831843", "#DB2777", "#F472B6"],
+                    labels={"Genre": "Gênero", "Venda_Media": "Venda Média / Jogo ($ mi)"},
+                )
+                fig_eff.update_traces(hovertemplate="<b>%{y}</b><br>Média por Jogo: %{x:.2f}M<extra></extra>")
+                fig_eff.update_coloraxes(showscale=False)
+                format_chart(fig_eff, height=380)
+                st.plotly_chart(fig_eff, use_container_width=True)
+
+        with col_table:
+            with st.container(border=True):
+                st.markdown("#### Ranking de Super Hits (Top Títulos)")
+                st.caption("Jogos com maior tração comercial e volume de unidades vendidas")
+
+                cols_display = ["Name", "Platform", "Publisher", "Year", "Global_Sales", "NA_Sales", "EU_Sales", "JP_Sales"]
+                df_top_hits = df_filtrado.nlargest(10, "Global_Sales")[cols_display].copy()
+                df_top_hits.columns = ["Título", "Plataforma", "Publicadora", "Ano", "Global (M)", "NA (M)", "EU (M)", "JP (M)"]
+
+                st.dataframe(
+                    df_top_hits,
+                    use_container_width=True,
+                    hide_index=True,
+                    height=340,
+                )
+
 # [IA] Gemini – Rodapé Informativo e Conformidade Acadêmica
 st.markdown("---")
 st.caption(
-    "📊 **Projeto Prático AVD 2026.2 — Cesar School** | "
+    "**Projeto Prático AVD 2026.2 — Cesar School** | "
     "Edição Dark Mode desenvolvida com Streamlit e Plotly. Base tratada a partir da Análise Exploratória (EDA)."
 )
